@@ -1,0 +1,54 @@
+{% extends 'flatpages/default.html' %} 
+
+{% load posts_filters %}
+{% load posts_tags %}
+
+{% block title %}
+Article
+{% endblock title %}
+ 
+
+{% block content %}
+   <h1>Все статьи</h1>
+   <h3>{% current_time '%b %d %Y' %}</h3>
+
+{% if article %}
+<table>
+    <tr>
+        <td>Заголовок</td>
+        <td>Дата публикации</td>
+        <td>Содержание</td>
+        <td>Категория</td>
+    </tr>
+        {% for articles in article %}
+    <tr>
+        <td>{{ article.name_post }}</td>
+        <td>{{ article.date_post| date:"d M Y" }}</td>
+        <td>{{ article.text_post| truncatechars:20 }}</td>
+        {% for cat in article.postCategory.all %}
+        <td>{{ cat.name_category }}</td>
+        {% endfor %}
+    </tr>
+        {% endfor %}
+</table>
+{% else %}
+<h3>Публикаций нет</h3>
+{% endif %}
+{% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}

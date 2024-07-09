@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+
+{% load posts_filters %}
+{% load posts_tags %}
+
+<!-- Название у нас будет Product -->
+{% block title %}
+Article
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<h1> {{ article.name_post|censor }} </h1>
+<h3> {{ article.date_post|date:"d M Y" }} </h3>
+<h3> {{ article.text_post|censor }} </h3>
+{% endblock content %}
