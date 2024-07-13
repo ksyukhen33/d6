@@ -1,7 +1,7 @@
 # Create your views here.
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView)
-from .models import Posts
+from .models import Posts, Category
 from .filters import PostsFilter
 from django.urls import reverse_lazy
 from .forms import PostsForm
@@ -132,28 +132,28 @@ class ArticleList(ListView):
 @csrf_protect
 def subscriptions(request):
     if request.method == 'POST':
-        PostCategory_id = request.POST.get('PostCategory_id')
-        PostCategory = PostCategory.objects.get(id=PostCategory_id)
+        category_id = request.POST.get('category_id')
+        category = Category.objects.get(id=category_id)
         action = request.POST.get('action')
 
         if action == 'subscribe':
-            Subscription.objects.create(user=request.user, postCategory=PostCategory)
+            Subscription.objects.create(user=request.user, Category=category)
         elif action == 'unsubscribe':
             Subscription.objects.filter(
                 user=request.user,
-                postCategory=PostCategory,
+                Category=category,
             ).delete()
 
-    categories_with_subscriptions = PostCategory.objects.annotate(
+    categories_with_subscriptions = Category.objects.annotate(
         user_subscribed=Exists(
             Subscription.objects.filter(
                 user=request.user,
-                postCategory=OuterRef('pk'),
+                Category=OuterRef('pk'),
             )
         )
-    ).order_by('name')
+    ).order_by('name_category')
     return render(
         request,
         'subscriptions.html',
-        {'PostCategories': categories_with_subscriptions},
+        {'categories': categories_with_subscriptions},
     )

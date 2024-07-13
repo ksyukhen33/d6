@@ -5,9 +5,9 @@ Subscriptions
 {% endblock title %}
 
 {% block content %}
-    {% for postCategory in postCategories  %}
+    {% for category in categories  %}
         <p>
-            {{ category.name }}
+            {{ category.name_category }}
             <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="category_id" value="{{ category.id }}" />
