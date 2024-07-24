@@ -1,14 +1,15 @@
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
-from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
+
 
 from .models import Posts
 
 
-@receiver(post_save, sender=Posts.postCategory.through)
-def post_created(instance, created, **kwargs):
-    if not created:
+@receiver(m2m_changed, sender=Posts.postCategory.through)
+def post_created(instance, **kwargs):
+    if not kwargs ['action'] == 'post_add':
         return
 
     emails = User.objects.filter(
@@ -25,7 +26,7 @@ def post_created(instance, created, **kwargs):
     html_content = (
         f'Статья: {instance.name_post}<br>'
         f'Текст: {instance.text_post}<br><br>'
-        f'<a href="http://127.0.0.1{instance.get_absolute_url()}">'
+        f'<a href="http://127.0.0.1:8000{instance.get_absolute_url()}">'
         f'Ссылка на статью</a>'
     )
     for email in emails:

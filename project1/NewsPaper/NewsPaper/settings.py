@@ -39,13 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-
     'django_filters',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
     'news.apps.NewsConfig',
+    'django_apscheduler',
 
 ]
 SITE_ID=1
@@ -167,3 +167,5 @@ SERVER_EMAIL = "Skilltest2024@yandex.ru"
 MANAGERS = (
     ('Alex', 'klyushinalexey80@yandex.ru'),
 )
+APSCHEDULER_DATETIME_FORMAT= "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT= 25
